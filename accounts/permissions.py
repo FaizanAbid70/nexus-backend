@@ -1,0 +1,10 @@
+from rest_framework.permissions import BasePermission
+
+class IsInvestor(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'investor'
+
+
+class IsEntrepreneur(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'entrepreneur'
