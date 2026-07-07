@@ -69,3 +69,19 @@ class PublicProfileView(APIView):
     def get(self, request, user_id):
         user = get_object_or_404(User, id=user_id)
         return Response(PublicProfileSerializer(user).data)
+
+
+class UserListView(APIView):
+    """
+    GET /api/auth/users/?role=investor
+    Lists other users (optionally filtered by role) so the frontend can pick
+    someone to invite to a meeting or view in the Investors/Entrepreneurs pages.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        queryset = User.objects.exclude(id=request.user.id)
+        role = request.query_params.get('role')
+        if role:
+            queryset = queryset.filter(role=role)
+        return Response(PublicProfileSerializer(queryset, many=True).data)

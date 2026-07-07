@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^^oshk^_92%)g@$drrr$%+*f^vgvd4gzd5p=%+2&l-kisfhdw_'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -31,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',  # must be listed before django.contrib.staticfiles for ASGI runserver to work
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +42,11 @@ INSTALLED_APPS = [
     'rest_framework',
     "rest_framework_simplejwt",
     'corsheaders',
+    'channels',
     'accounts',
+    'meetings',
+    'documents',
+    'calls',
 ]
 
 MIDDLEWARE = [
@@ -78,6 +84,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nexus_backend.wsgi.application'
+ASGI_APPLICATION = 'nexus_backend.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        # In-memory layer: fine for local dev / a single-process demo.
+        # Would need channels_redis for a real multi-server deployment.
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 
 # Database
@@ -86,11 +101,11 @@ WSGI_APPLICATION = 'nexus_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neondb',
-        'USER': 'neondb_owner',
-        'PASSWORD': 'npg_dXDe78xRTCpl',
-        'HOST': 'ep-billowing-cherry-atbkl7rl.c-9.us-east-1.aws.neon.tech',
-        'PORT': '5432',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default='5432'),
         'OPTIONS': {
             'sslmode': 'require',
         },
@@ -133,6 +148,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Media files (uploaded documents, signatures)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'accounts.User'
 

@@ -8,6 +8,7 @@ class User(AbstractUser):
         ('investor', 'Investor'),
         ('entrepreneur', 'Entrepreneur'),
     )
+    name = models.CharField(max_length=150, blank=True, default='')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     bio = models.TextField(blank=True, default='')
     profile_picture = models.URLField(blank=True, default='')
