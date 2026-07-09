@@ -1,2 +1,1 @@
-release: python manage.py migrate && python manage.py collectstatic --noinput
-web: daphne nexus_backend.asgi:application --port $PORT --bind 0.0.0.0
+web: python manage.py migrate --noinput && python manage.py collectstatic --noinput && daphne nexus_backend.asgi:application --port $PORT --bind 0.0.0.0
