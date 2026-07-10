@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.views.static import serve as static_serve
+from django.views.decorators.clickjacking import xframe_options_exempt
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
@@ -12,6 +13,8 @@ urlpatterns = [
     path('api/documents/', include('documents.urls')),
 ]
 
+media_serve = xframe_options_exempt(static_serve)
+
 urlpatterns += [
-    path('media/<path:path>', static_serve, {'document_root': settings.MEDIA_ROOT}),
+    path('media/<path:path>', media_serve, {'document_root': settings.MEDIA_ROOT}),
 ]
