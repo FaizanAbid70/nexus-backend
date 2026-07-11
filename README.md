@@ -3,7 +3,7 @@
 Django REST Framework backend for **Nexus**, an Investor & Entrepreneur collaboration
 platform. Built as part of a Full Stack Development Internship (Developers Hub).
 
-**Live API:** https://web-production-f80ee.up.railway.app/api/
+**Live API (backend):** https://web-production-f80ee.up.railway.app/api/auth/ping/
 **Live app (frontend):** https://nexus-five-tau.vercel.app
 
 ## Tech Stack
